@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#0B1B52">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Boat Club Battle Royale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- JOIN SCREEN -->
+<div id="join" class="join" hidden>
+  <div class="join-inner">
+    <div class="logo">
+      <span class="logo-top">Boat Club</span>
+      <span class="logo-main">Battle Royale</span>
+      <span class="logo-sub">Cambridge · Crews of four · One life each</span>
+    </div>
+    <form id="joinForm" class="card" autocomplete="off">
+      <label for="nameInput">Your name</label>
+      <input id="nameInput" type="text" maxlength="30" placeholder="e.g. Hattie Brookes" required>
+      <label for="clubInput">Boat club (college)</label>
+      <input id="clubInput" type="text" list="clubList" maxlength="40" placeholder="Start typing, e.g. Jesus" required>
+      <datalist id="clubList"></datalist>
+      <button class="btn btn-yellow" type="submit" id="joinBtn">Drop in</button>
+      <p class="fine">Your crew gets drawn once everyone's signed up. The app will ask for your location so your crew can see you on the map.</p>
+    </form>
+    <button class="link" id="organiserLink" type="button">Staff login (organisers &amp; marshals)</button>
+    <div id="pinBox" class="card" hidden>
+      <label for="marshalName">Name</label>
+      <input id="marshalName" type="text" maxlength="30" placeholder="Admin, or your name if you're a marshal" autocapitalize="words">
+      <label for="pinInput">Staff PIN</label>
+      <input id="pinInput" type="password" inputmode="numeric" maxlength="12">
+      <button class="btn btn-blue" type="button" id="pinBtn">Log in</button>
+      <p class="fine">Log in as <b>Admin</b> to run the game: zone, storm, pubs and crews. Any other name makes you a marshal.</p>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="app" hidden>
+  <main>
+    <!-- MAP -->
+    <section id="view-map" class="view view-map">
+      <div id="map" class="map"></div>
+      <div class="hud">
+        <div class="hud-zone" id="hudZone">
+          <span class="hud-label" id="hudPhase">Warm-up</span>
+          <span class="hud-timer" id="hudTimer">--:--</span>
+        </div>
+        <div class="hud-counts">
+          <div class="hud-count"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8z"/></svg><b id="hudAlive">0</b><span>alive</span></div>
+          <div class="hud-count"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17h18l-2 4H5zM6 15l3-9h6l3 9z"/></svg><b id="hudCrews">0</b><span>crews</span></div>
+        </div>
+      </div>
+      <div class="storm-warning" id="stormWarning" hidden></div>
+      <div class="map-buttons">
+        <button class="round" id="locateBtn" type="button" aria-label="Centre on me"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4" stroke-width="2.4" fill="none"/></svg></button>
+        <button class="round" id="zoneBtn" type="button" aria-label="Show the whole zone"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke-width="2.4"/><circle cx="12" cy="12" r="2"/></svg></button>
+        <button class="round round-yellow" id="planBtn" type="button" aria-label="Zone planner" hidden><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" fill="none" stroke-width="2.2"/></svg></button>
+      </div>
+      <button class="gps-cta" id="gpsCta" type="button" hidden>Share my location</button>
+      <div class="admin-tip" id="adminTip" hidden></div>
+
+      <!-- Zone planner (organisers) -->
+      <div class="planner" id="planner" hidden>
+        <div class="row spread"><h3>Zone planner</h3><button class="link" id="planClose" type="button">Close</button></div>
+        <p class="fine">Drag the yellow pin or tap the map to move the centre. Tap a pub to tick it in or out of play.</p>
+        <div class="range-row"><input type="range" id="planR" min="200" max="3000" step="50" aria-label="Zone radius"><output id="planROut"></output></div>
+        <div class="plan-info" id="planInfo"></div>
+        <div class="grid2">
+          <button class="btn btn-ghost btn-sm" id="planTickIn" type="button">Tick all inside</button>
+          <button class="btn btn-ghost btn-sm" id="planUntickOut" type="button">Untick outside</button>
+        </div>
+        <button class="btn btn-yellow btn-sm" id="planStart" type="button">Set as the zone now</button>
+        <div class="grid2">
+          <div class="stack"><label for="planHold">Storm moves in</label><select id="planHold"><option value="0">Now</option><option value="2">2 min</option><option value="5" selected>5 min</option><option value="10">10 min</option><option value="15">15 min</option><option value="20">20 min</option><option value="30">30 min</option></select></div>
+          <div class="stack"><label for="planShrink">Shrinks over</label><select id="planShrink"><option value="5">5 min</option><option value="10" selected>10 min</option><option value="15">15 min</option><option value="20">20 min</option><option value="30">30 min</option></select></div>
+        </div>
+        <button class="btn btn-storm btn-sm" id="planNext" type="button">Send the storm here</button>
+      </div>
+
+      <!-- Pub sheet -->
+      <div class="sheet" id="pubSheet" hidden>
+        <button class="sheet-close" id="pubClose" type="button" aria-label="Close">×</button>
+        <div class="sheet-body" id="pubBody"></div>
+      </div>
+    </section>
+
+    <!-- CREW -->
+    <section id="view-crew" class="view view-scroll" hidden>
+      <div id="crewBody"></div>
+    </section>
+
+    <!-- DUELS -->
+    <section id="view-duels" class="view view-scroll" hidden>
+      <div id="duelBody"></div>
+    </section>
+
+    <!-- MARSHAL -->
+    <section id="view-marshal" class="view view-scroll" hidden>
+      <div id="marshalBody"></div>
+    </section>
+
+    <!-- HQ (organiser) -->
+    <section id="view-hq" class="view view-scroll" hidden>
+      <div id="hqBody"></div>
+    </section>
+  </main>
+
+  <nav class="tabbar" id="tabbar">
+    <button type="button" data-view="map" class="on"><svg viewBox="0 0 24 24"><path d="M9 3 3 5v16l6-2 6 2 6-2V3l-6 2zM9 3v16M15 5v16" fill="none" stroke-width="2"/></svg><span>Map</span></button>
+    <button type="button" data-view="crew"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20c0-3.3 2.7-6 6-6s6 2.7 6 6zM12 20c0-3.3 1.8-6 4-6s6 2.7 6 6z"/></svg><span>Crew</span></button>
+    <button type="button" data-view="duels"><svg viewBox="0 0 24 24"><path d="M4 3h5v2H6v14h3v2H4zM20 3h-5v2h3v14h-3v2h5zM10 11h4v2h-4z"/></svg><span>Duels</span><i class="badge" id="duelBadge" hidden></i></button>
+    <button type="button" data-view="marshal" id="marshalTab" hidden><svg viewBox="0 0 24 24"><path d="M3 9h18v11H3zM3 9l3-5h12l3 5M9 13h6" fill="none" stroke-width="2"/></svg><span>Marshal</span></button>
+    <button type="button" data-view="hq" id="hqTab" hidden><svg viewBox="0 0 24 24"><path d="M12 2 3 6v6c0 5 4 9 9 10 5-1 9-5 9-10V6z"/></svg><span>HQ</span></button>
+  </nav>
+</div>
+
+<!-- Incoming challenge -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-card" id="modalCard"></div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+<div class="mode-flag" id="modeFlag" hidden>Demo mode · this device only</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>

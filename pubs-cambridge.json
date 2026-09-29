@@ -1,0 +1,719 @@
+{
+"source": "OpenStreetMap contributors (ODbL), fetched 2026-09-29",
+"pubs": [
+{
+"id": "n302359385",
+"name": "2648",
+"lat": 52.206585,
+"lon": 0.118374,
+"kind": "bar"
+},
+{
+"id": "w211713399",
+"name": "Ancient Shepherds",
+"lat": 52.220358,
+"lon": 0.17254,
+"kind": "pub"
+},
+{
+"id": "n1594688118",
+"name": "Architect",
+"lat": 52.212038,
+"lon": 0.113086,
+"kind": "pub"
+},
+{
+"id": "n11417917790",
+"name": "Bar -OH",
+"lat": 52.203336,
+"lon": 0.122204,
+"kind": "bar"
+},
+{
+"id": "n20921875",
+"name": "Baron of Beef",
+"lat": 52.208916,
+"lon": 0.118114,
+"kind": "pub"
+},
+{
+"id": "n23719482",
+"name": "Blue Ball Inn",
+"lat": 52.18333,
+"lon": 0.094047,
+"kind": "pub"
+},
+{
+"id": "n12502910466",
+"name": "Boom - Battle Bar",
+"lat": 52.203178,
+"lon": 0.123639,
+"kind": "bar"
+},
+{
+"id": "w171887754",
+"name": "Burleigh Arms",
+"lat": 52.208237,
+"lon": 0.13272,
+"kind": "pub"
+},
+{
+"id": "w172407012",
+"name": "Byron's Bear",
+"lat": 52.211469,
+"lon": 0.118534,
+"kind": "pub"
+},
+{
+"id": "w435193949",
+"name": "Calverley's Brewery and Tap Room",
+"lat": 52.201331,
+"lon": 0.142674,
+"kind": "pub"
+},
+{
+"id": "n20826694",
+"name": "Cambridge Blue",
+"lat": 52.202379,
+"lon": 0.13919,
+"kind": "pub"
+},
+{
+"id": "w191568707",
+"name": "Cambridge Tap",
+"lat": 52.203429,
+"lon": 0.123395,
+"kind": "bar"
+},
+{
+"id": "n20940431",
+"name": "Carpenters Arms",
+"lat": 52.215762,
+"lon": 0.114264,
+"kind": "pub"
+},
+{
+"id": "n20922152",
+"name": "Champion of the Thames",
+"lat": 52.207306,
+"lon": 0.12444,
+"kind": "pub"
+},
+{
+"id": "w118943808",
+"name": "Corner House",
+"lat": 52.209522,
+"lon": 0.143434,
+"kind": "pub"
+},
+{
+"id": "n25285250",
+"name": "Devonshire Arms",
+"lat": 52.198925,
+"lon": 0.139051,
+"kind": "pub"
+},
+{
+"id": "w52115600",
+"name": "Dobblers Inn",
+"lat": 52.205457,
+"lon": 0.140036,
+"kind": "pub"
+},
+{
+"id": "n9416385509",
+"name": "Dutch",
+"lat": 52.219586,
+"lon": 0.087659,
+"kind": "bar"
+},
+{
+"id": "n20458787",
+"name": "Earl of Beaconsfield",
+"lat": 52.198439,
+"lon": 0.142229,
+"kind": "pub"
+},
+{
+"id": "w225399270",
+"name": "Earl of Derby",
+"lat": 52.192195,
+"lon": 0.134303,
+"kind": "pub"
+},
+{
+"id": "w179837563",
+"name": "Fort St George",
+"lat": 52.212456,
+"lon": 0.127786,
+"kind": "pub"
+},
+{
+"id": "n21137287",
+"name": "Green Dragon",
+"lat": 52.217946,
+"lon": 0.145482,
+"kind": "pub"
+},
+{
+"id": "n21642213",
+"name": "Green Man",
+"lat": 52.176586,
+"lon": 0.113057,
+"kind": "pub"
+},
+{
+"id": "w159704089",
+"name": "Hank's Dirty",
+"lat": 52.19789,
+"lon": 0.122914,
+"kind": "bar"
+},
+{
+"id": "n1376847029",
+"name": "Hidden Rooms Cocktail Lounge & Events Venue",
+"lat": 52.208134,
+"lon": 0.119881,
+"kind": "bar"
+},
+{
+"id": "n21642521",
+"name": "Hudson's Ale House",
+"lat": 52.174562,
+"lon": 0.112904,
+"kind": "pub"
+},
+{
+"id": "n1832280892",
+"name": "King Street Run",
+"lat": 52.207228,
+"lon": 0.125244,
+"kind": "pub"
+},
+{
+"id": "n9678576398",
+"name": "King's College Bar",
+"lat": 52.203868,
+"lon": 0.116951,
+"kind": "bar"
+},
+{
+"id": "w211724201",
+"name": "Kings Head",
+"lat": 52.221375,
+"lon": 0.169927,
+"kind": "pub"
+},
+{
+"id": "w134125339",
+"name": "Kingston Arms",
+"lat": 52.200373,
+"lon": 0.13974,
+"kind": "pub"
+},
+{
+"id": "n25285273",
+"name": "Live & Let Live",
+"lat": 52.199374,
+"lon": 0.135138,
+"kind": "pub"
+},
+{
+"id": "w110256313",
+"name": "Old Spring",
+"lat": 52.214422,
+"lon": 0.127752,
+"kind": "pub"
+},
+{
+"id": "n5676057080",
+"name": "Old Ticket Office",
+"lat": 52.194641,
+"lon": 0.137772,
+"kind": "pub"
+},
+{
+"id": "n21391223",
+"name": "Panton Arms",
+"lat": 52.196424,
+"lon": 0.124943,
+"kind": "pub"
+},
+{
+"id": "w166369101",
+"name": "Portland Arms",
+"lat": 52.214453,
+"lon": 0.124601,
+"kind": "pub"
+},
+{
+"id": "n20922155",
+"name": "Prince Regent",
+"lat": 52.199989,
+"lon": 0.127045,
+"kind": "pub"
+},
+{
+"id": "w188821806",
+"name": "Railway Vue",
+"lat": 52.242607,
+"lon": 0.110917,
+"kind": "pub"
+},
+{
+"id": "n24673114",
+"name": "Rathmore Club",
+"lat": 52.188595,
+"lon": 0.139825,
+"kind": "pub"
+},
+{
+"id": "w108883430",
+"name": "Red Lion",
+"lat": 52.180389,
+"lon": 0.095586,
+"kind": "pub"
+},
+{
+"id": "w177680599",
+"name": "Red Lion",
+"lat": 52.185842,
+"lon": 0.172005,
+"kind": "pub"
+},
+{
+"id": "n20963376",
+"name": "Revolution",
+"lat": 52.203369,
+"lon": 0.123156,
+"kind": "bar"
+},
+{
+"id": "w134111534",
+"name": "Royal Standard",
+"lat": 52.196981,
+"lon": 0.149732,
+"kind": "pub"
+},
+{
+"id": "n23719278",
+"name": "Rupert Brooke",
+"lat": 52.181185,
+"lon": 0.093575,
+"kind": "pub"
+},
+{
+"id": "n25285271",
+"name": "Salisbury Arms",
+"lat": 52.198315,
+"lon": 0.135417,
+"kind": "pub"
+},
+{
+"id": "w127812957",
+"name": "Sir Isaac Newton",
+"lat": 52.213427,
+"lon": 0.112175,
+"kind": "pub"
+},
+{
+"id": "w372486548",
+"name": "Six Bells",
+"lat": 52.20036,
+"lon": 0.134464,
+"kind": "pub"
+},
+{
+"id": "n301281578",
+"name": "SmokeWorks Tap",
+"lat": 52.203948,
+"lon": 0.118427,
+"kind": "bar"
+},
+{
+"id": "w172320765",
+"name": "St Radegund",
+"lat": 52.207633,
+"lon": 0.126661,
+"kind": "pub"
+},
+{
+"id": "n4820111626",
+"name": "Station Tavern",
+"lat": 52.194907,
+"lon": 0.137646,
+"kind": "pub"
+},
+{
+"id": "w50928339",
+"name": "The Alex",
+"lat": 52.203882,
+"lon": 0.139364,
+"kind": "pub"
+},
+{
+"id": "n21391227",
+"name": "The Alma",
+"lat": 52.195988,
+"lon": 0.125373,
+"kind": "pub"
+},
+{
+"id": "w136330945",
+"name": "The Anchor",
+"lat": 52.201932,
+"lon": 0.115752,
+"kind": "pub"
+},
+{
+"id": "w149032883",
+"name": "The Bath House",
+"lat": 52.204143,
+"lon": 0.118486,
+"kind": "pub"
+},
+{
+"id": "n9042161425",
+"name": "The Bird or Worm?",
+"lat": 52.208499,
+"lon": 0.13921,
+"kind": "pub"
+},
+{
+"id": "w134385094",
+"name": "The Blue Moon",
+"lat": 52.204866,
+"lon": 0.136627,
+"kind": "pub"
+},
+{
+"id": "w110256317",
+"name": "The Boathouse",
+"lat": 52.2137,
+"lon": 0.123526,
+"kind": "pub"
+},
+{
+"id": "w132851029",
+"name": "The Brook",
+"lat": 52.196079,
+"lon": 0.155408,
+"kind": "pub"
+},
+{
+"id": "n262797752",
+"name": "The Cambridge Brew House",
+"lat": 52.207442,
+"lon": 0.122222,
+"kind": "pub"
+},
+{
+"id": "w126246128",
+"name": "The Carlton Arms",
+"lat": 52.222112,
+"lon": 0.118862,
+"kind": "pub"
+},
+{
+"id": "n20922157",
+"name": "The Castle Bar",
+"lat": 52.203079,
+"lon": 0.123733,
+"kind": "pub"
+},
+{
+"id": "w127761115",
+"name": "The Castle Inn",
+"lat": 52.211964,
+"lon": 0.113587,
+"kind": "pub"
+},
+{
+"id": "n429597760",
+"name": "The Clarendon Arms",
+"lat": 52.204637,
+"lon": 0.127597,
+"kind": "pub"
+},
+{
+"id": "n24672502",
+"name": "The Dumpling Tree",
+"lat": 52.189244,
+"lon": 0.153061,
+"kind": "pub"
+},
+{
+"id": "w149032866",
+"name": "The Eagle",
+"lat": 52.204077,
+"lon": 0.117993,
+"kind": "pub"
+},
+{
+"id": "n20823855",
+"name": "The Elm Tree",
+"lat": 52.205155,
+"lon": 0.129426,
+"kind": "pub"
+},
+{
+"id": "w134805845",
+"name": "The Emperor",
+"lat": 52.197142,
+"lon": 0.12949,
+"kind": "pub"
+},
+{
+"id": "n20458870",
+"name": "The Empress",
+"lat": 52.199109,
+"lon": 0.147239,
+"kind": "pub"
+},
+{
+"id": "n12047747783",
+"name": "The Engineer's House",
+"lat": 52.212469,
+"lon": 0.14284,
+"kind": "bar"
+},
+{
+"id": "n20823843",
+"name": "The Free Press",
+"lat": 52.20478,
+"lon": 0.130383,
+"kind": "pub"
+},
+{
+"id": "w67665889",
+"name": "The Geldart",
+"lat": 52.203659,
+"lon": 0.142199,
+"kind": "pub"
+},
+{
+"id": "w127965084",
+"name": "The Golden Hind",
+"lat": 52.227967,
+"lon": 0.145571,
+"kind": "pub"
+},
+{
+"id": "n2021774032",
+"name": "The Grain & Hop Store",
+"lat": 52.200659,
+"lon": 0.126679,
+"kind": "pub"
+},
+{
+"id": "w143469264",
+"name": "The Granta",
+"lat": 52.199704,
+"lon": 0.113848,
+"kind": "pub"
+},
+{
+"id": "w136196114",
+"name": "The Grapes",
+"lat": 52.214991,
+"lon": 0.110685,
+"kind": "pub"
+},
+{
+"id": "w154730026",
+"name": "The Green Man",
+"lat": 52.180035,
+"lon": 0.095116,
+"kind": "pub"
+},
+{
+"id": "n13332019937",
+"name": "The Handsome Prince",
+"lat": 52.207265,
+"lon": 0.121955,
+"kind": "bar"
+},
+{
+"id": "w131306510",
+"name": "The Haymakers",
+"lat": 52.21746,
+"lon": 0.139454,
+"kind": "pub"
+},
+{
+"id": "n298851585",
+"name": "The Lab",
+"lat": 52.199966,
+"lon": 0.126561,
+"kind": "bar"
+},
+{
+"id": "w150907263",
+"name": "The Lord Byron Inn",
+"lat": 52.174433,
+"lon": 0.110561,
+"kind": "pub"
+},
+{
+"id": "w45827856",
+"name": "The Maypole",
+"lat": 52.209642,
+"lon": 0.119218,
+"kind": "pub"
+},
+{
+"id": "w136330946",
+"name": "The Mill",
+"lat": 52.201488,
+"lon": 0.116269,
+"kind": "pub"
+},
+{
+"id": "n20921876",
+"name": "The Mitre",
+"lat": 52.208865,
+"lon": 0.118205,
+"kind": "pub"
+},
+{
+"id": "w37800469",
+"name": "The Petersfield",
+"lat": 52.201288,
+"lon": 0.14071,
+"kind": "pub"
+},
+{
+"id": "w137992313",
+"name": "The Pickerel",
+"lat": 52.209926,
+"lon": 0.116197,
+"kind": "pub"
+},
+{
+"id": "n2538127975",
+"name": "The Pint Shop",
+"lat": 52.204203,
+"lon": 0.119116,
+"kind": "pub"
+},
+{
+"id": "w305516915",
+"name": "The Plough",
+"lat": 52.224385,
+"lon": 0.16773,
+"kind": "pub"
+},
+{
+"id": "n20940220",
+"name": "The Punter",
+"lat": 52.210532,
+"lon": 0.113247,
+"kind": "pub"
+},
+{
+"id": "w341321937",
+"name": "The Queen Edith",
+"lat": 52.180245,
+"lon": 0.153057,
+"kind": "pub"
+},
+{
+"id": "w174752202",
+"name": "The Red Bull",
+"lat": 52.196529,
+"lon": 0.108688,
+"kind": "pub"
+},
+{
+"id": "w1204234283",
+"name": "The Regal",
+"lat": 52.202856,
+"lon": 0.123535,
+"kind": "pub"
+},
+{
+"id": "n25288641",
+"name": "The Rock",
+"lat": 52.187559,
+"lon": 0.146704,
+"kind": "pub"
+},
+{
+"id": "w137326140",
+"name": "The Seven Stars",
+"lat": 52.209731,
+"lon": 0.143954,
+"kind": "pub"
+},
+{
+"id": "w127367856",
+"name": "The Ship",
+"lat": 52.23105,
+"lon": 0.128866,
+"kind": "pub"
+},
+{
+"id": "w110256311",
+"name": "The Tivoli",
+"lat": 52.213654,
+"lon": 0.123844,
+"kind": "pub"
+},
+{
+"id": "w148827006",
+"name": "The Tram Depot",
+"lat": 52.204652,
+"lon": 0.132839,
+"kind": "pub"
+},
+{
+"id": "n20940218",
+"name": "The Waterman",
+"lat": 52.214182,
+"lon": 0.125489,
+"kind": "pub"
+},
+{
+"id": "w134808010",
+"name": "The Wine Rooms",
+"lat": 52.195312,
+"lon": 0.131176,
+"kind": "bar"
+},
+{
+"id": "w137328263",
+"name": "The Wrestlers",
+"lat": 52.210979,
+"lon": 0.146294,
+"kind": "pub"
+},
+{
+"id": "n11940666367",
+"name": "W Cafe & Bar",
+"lat": 52.210383,
+"lon": 0.09022,
+"kind": "bar"
+},
+{
+"id": "n3775226174",
+"name": "WT's Sports Bar",
+"lat": 52.205253,
+"lon": 0.133772,
+"kind": "bar"
+},
+{
+"id": "n20827166",
+"name": "White Swan",
+"lat": 52.199338,
+"lon": 0.13926,
+"kind": "pub"
+},
+{
+"id": "n20922173",
+"name": "d'Arry's",
+"lat": 52.207231,
+"lon": 0.1217,
+"kind": "pub"
+}
+]
+}
