@@ -1,4 +1,4 @@
-import { FIREBASE_CONFIG, STAFF_PIN, ADMIN_NAME, GAME_ID, DEFAULTS, GAMES, LOOT } from './config.js';
+import { FIREBASE_CONFIG, STAFF_PIN, ADMIN_NAME, GAME_ID, DEFAULTS, GAMES, LOOT } from './config.js?v=2';
 
 /* ============================================================
    Helpers
@@ -278,12 +278,17 @@ function pushLoc(force) {
    Map
    ============================================================ */
 let map, storm, zoneC, nextC, draftC, pubLayer, peopleLayer, dropLayer, planC, planHandle, planDragging = false;
-const OUTER = [[53.5, -1.2], [53.5, 1.5], [50.9, 1.5], [50.9, -1.2]];
+// The storm only needs to cover the playable box, plus a margin so its edge never shows.
+const BOUNDS = DEFAULTS.bounds || [[52.150, 0.035], [52.262, 0.215]];
+const OUTER = (([[s, w], [n, e]]) => [[n + .03, w - .05], [n + .03, e + .05], [s - .03, e + .05], [s - .03, w - .05]])(BOUNDS);
 function initMap() {
-  map = L.map('map', { zoomControl: false, attributionControl: true, tap: true }).setView(DEFAULTS.center, 14);
+  map = L.map('map', {
+    zoomControl: false, attributionControl: true, tap: true,
+    maxBounds: BOUNDS, maxBoundsViscosity: 1, minZoom: DEFAULTS.minZoom || 12
+  }).setView(DEFAULTS.center, 14);
   const t = DEFAULTS.tiles || {};
   L.tileLayer(t.url || 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: t.maxZoom || 19,
+    maxZoom: t.maxZoom || 19, minZoom: DEFAULTS.minZoom || 12, bounds: BOUNDS, keepBuffer: 1,
     attribution: t.attribution || '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
   storm = L.polygon([OUTER], { stroke: false, fillColor: '#A23CFF', fillOpacity: .36, interactive: false }).addTo(map);

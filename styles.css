@@ -72,6 +72,10 @@ h3 { font-size: 24px; }
 .btn:disabled { opacity: .4; cursor: not-allowed; }
 .btn-yellow { --c: var(--yellow); --t: #0B1440; }
 .btn-blue { --c: var(--sky); --t: #06173F; }
+/* Dark lettering on bright buttons gets a thin white outline and a soft lift. */
+.btn-yellow, .btn-blue, .gps-cta, .admin-tip {
+  text-shadow: -1px -1px 0 rgba(255,255,255,.85), 1px -1px 0 rgba(255,255,255,.85), -1px 1px 0 rgba(255,255,255,.85), 1px 1px 0 rgba(255,255,255,.85), 0 3px 0 rgba(255,255,255,.35);
+}
 .btn-storm { --c: var(--storm); --t: #fff; }
 .btn-red { --c: var(--red); --t: #fff; }
 .btn-ghost { --c: rgba(255, 255, 255, .1); --t: #fff; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .25); }
@@ -104,8 +108,12 @@ input[type="range"] { width: 100%; accent-color: var(--yellow); }
 }
 .join-inner { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 16px; }
 .logo { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 18px 0 6px; transform: skewX(-6deg); }
-.logo-top, .logo-main { font-family: var(--display); font-weight: 900; text-transform: uppercase; line-height: .86; }
-.logo-top { font-size: 44px; color: #fff; text-shadow: 0 4px 0 #0A1A5C; }
+.logo-top, .logo-main { font-family: var(--display); font-weight: 900; text-transform: uppercase; line-height: .9; }
+.logo-top {
+  position: relative; z-index: 1; margin-bottom: 14px; font-size: 46px; color: #fff;
+  -webkit-text-stroke: 1.5px #0A1A5C; paint-order: stroke fill;
+  text-shadow: 0 3px 0 #0A1A5C, 0 6px 0 rgba(0, 0, 0, .35), 0 0 18px rgba(46, 194, 255, .45);
+}
 .logo-main {
   font-size: 64px; color: var(--yellow);
   text-shadow: 0 4px 0 #B36B00, 0 8px 0 rgba(0, 0, 0, .35);

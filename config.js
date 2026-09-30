@@ -29,6 +29,10 @@ export const DEFAULTS = {
   // app with the zone planner (HQ → Open zone planner), no need to edit this.
   center: [52.2072, 0.1188],
   radiusM: 1100,
+  // The map is locked to this box (south-west, north-east) so phones never download
+  // or draw anything outside Cambridge. Roughly 7 km each way from the centre.
+  bounds: [[52.150, 0.035], [52.262, 0.215]],
+  minZoom: 12,
   // How close (metres) a crew member must be to a pub to count as "in" it.
   pubRadiusM: 45,
   // A location older than this is treated as unknown.
