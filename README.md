@@ -1,145 +1,80 @@
 # Boat Club Battle Royale
 
-A phone web app for a Fortnite-style drinking game across Cambridge boat clubs.
-Players sign up with their name and college, get drawn into random crews of four,
-and move around a real map of Cambridge. A storm shrinks the play zone. Pubs are the
-drop points: the map shows how many crews are in each one, and once you're inside
-you can challenge a crew to a Boat Race, Arm Wrestle, Flip Cup and so on. Each player
-has one life. The last crew with anyone left wins.
+A Fortnite-style drinking game for Cambridge boat clubs, played on your phone.
 
-## Files
+**Play:** https://lulud4c.github.io/boat-club-battle-royale/
 
-| File | What it is |
+Sign up with your name and college and get drawn into a random crew of four. Then roam
+a real map of Cambridge while the storm closes in. Pubs are the drop points: loot
+chests, rival crews and duels are all inside. One life each. The last crew standing wins.
+
+## How to play
+1. Open the link, sign up, and tap **Share my location**. Keep the tab open during the
+   game, because phones pause location in background tabs.
+2. Once crews are drawn, your crew shows on the **Crew** tab and on the map.
+3. **Stay inside the zone.** The purple storm is out of bounds. A dashed circle and a
+   countdown warn you where the next zone will be. Get caught outside and a marshal or
+   organiser can knock you out.
+4. **Head to drop pubs.** Each pub pin shows how many crews are inside, and how many
+   opens its loot chest has left.
+5. **Duel.** Inside a pub you can see which crews are there and challenge one. They
+   accept or forfeit (forfeiting costs a rower). The losing crew picks one rower to go out.
+
+### The games
+| Game | How it works |
 | --- | --- |
-| `index.html`, `styles.css`, `app.js` | The app. Plain HTML/JS, no build step. |
-| `config.js` | **Edit this.** Firebase keys, organiser PIN, starting zone, games list. |
-| `pubs-cambridge.json` | Saved list of 102 Cambridge pubs and bars from OpenStreetMap. Used if the live lookup fails. |
-| `firestore.rules` | Database rules to paste into Firebase. |
-| `fonts/` | Put `BurbankBigCondensed-Black.woff2` here if you have a licence (see below). |
+| Boat Race | Relay chug. Stroke drinks first, bow last. First crew to finish wins. |
+| Arm Wrestle | Each crew picks a champion. Best of three. |
+| Flip Cup | Line up opposite each other. Drink, flip, next rower. |
+| Rock Paper Scissors | Captains, best of five. |
+| Pub Quiz Question | A neutral asks one question. First right answer wins. |
 
-## Try it on your computer
+## Loot
+Every drop pub has a chest with 5 opens, **one per crew**. You have to be inside the pub
+(by GPS) to open it. The app rolls the loot, and it belongs to your crew.
 
-```bash
-cd C:\Users\lulum\Projects\boat-club-battle-royale
-python -m http.server 5173
-```
-
-Open http://localhost:5173. With no Firebase config it runs in **demo mode**:
-everything is saved in that one browser. Tap **Staff login**, enter the name **Admin** and the PIN from `config.js`,
-then use the HQ tab's demo tools (add bots, put bot crews in pubs, teleport yourself)
-to try a duel without walking anywhere.
-
-## Set up for the real game (about 15 minutes)
-
-### 1. Create a Firebase project (free)
-1. Go to https://console.firebase.google.com and click **Create a project**.
-2. In the project, open **Build → Firestore Database → Create database**.
-   Pick the `eur3 (europe-west)` location and start in **production mode**.
-3. Open the **Rules** tab, paste the contents of `firestore.rules`, and click **Publish**.
-   Change the date in the rules to the day after your game.
-4. Open **Project settings** (gear icon) → **Your apps** → click the `</>` web icon,
-   register an app, and copy the `firebaseConfig` object.
-5. Paste it into `config.js` as `FIREBASE_CONFIG`, and change `STAFF_PIN`.
-
-### 2. Put it online (GPS needs https)
-The easiest option is **Netlify Drop**: go to https://app.netlify.com/drop and drag the
-whole `boat-club-battle-royale` folder onto the page. You get an `https://….netlify.app`
-link to send to everyone. To update it later, drag the folder again.
-
-Firebase Hosting works too: `npx firebase-tools login`, then `npx firebase-tools init hosting`
-(public directory: `.`) and `npx firebase-tools deploy`.
-
-### 3. On the night
-1. Staff open the link and tap **Staff login**. Everyone uses the same PIN (`STAFF_PIN`, 2468 by default):
-   - name **Admin** → the organiser account (HQ, zone planner, the storm, pubs, crews)
-   - any other name → a marshal
-2. Players open the link, sign up and tap **Share my location** (they have to allow it).
-3. In **HQ**:
-   - **Open zone planner** (or the yellow pencil button on the map). Drag the yellow pin
-     or tap the map to move the zone, and use the slider to resize it. The panel shows how
-     many pubs are inside and roughly how long it takes to walk across. Tap a pub pin to
-     tick it in or out of play. When you're happy, tap **Save start zone**.
-   - Or use the pub checklist in HQ: filter by *In zone / Ticked / All*, search, and tick.
-     Aim for 10 to 15 drop pubs.
-   - **Randomise crews** once everyone's in.
-   - **Send the storm**: open the zone planner, drag and resize the circle to where the
-     zone should close to, choose "Storm moves in" and "Shrinks over", then tap
-     **Send the storm here** (tap twice to confirm). "Set as the zone now" moves the zone
-     instantly with no storm, which is handy before the game starts.
-   - **In the storm** lists everyone standing outside the zone. Tap **Storm out** to
-     knock them out.
-   - Sort out any disputed duels.
-
-## How duels work
-1. Your crew walks into a drop pub. The pub sheet shows the crews inside (within 45 m).
-2. Tap **Challenge** on another crew and pick a game.
-3. They get a popup: **Accept** or **Forfeit** (forfeit costs them a rower).
-4. After playing, either crew taps **We won** or **We lost**. If the winners report it,
-   the losers confirm or dispute. A dispute goes to the organisers.
-5. The losing crew picks one rower to knock out. One life each.
-
-## Marshals (live loot drops)
-Marshals are people walking around with the drinks. They tap **Staff login** and enter
-their own name with the staff PIN.
-- Everyone sees each marshal on the map as a **supply drop** crate, with their name,
-  whether they're stocked, running low, empty or on a break, and walking directions.
-- A marshal chooses **Live GPS** (the crate follows them) or **Fixed spot** (they pin
-  where they're standing, so GPS drift doesn't make the crate jump about).
-- The **Marshal** tab lets them:
-  - **Judge a duel**: any open duel, nearest first. Tap who won, then pick who's out.
-  - **Referee on the spot**: two crews turn up, pick them (closest listed first) and the
-    game, then tap the winner. No need for the crews to use the pub challenge flow.
-  - **Storm patrol**: alive players outside the zone, nearest first, with **Storm out**.
-  - **Near you**: alive players within 200 m, with **Out** for rule breaks.
-  - **Revive**: a knocked-out player who reaches the marshal (within 60 m) can be brought
-    back, once per player, while their crew is still alive. Change `revivesPerPlayer` and
-    `reviveRadiusM` in `config.js`. **The catch:** their whole crew is **Exposed** for
-    10 minutes. Everyone sees them on the map, they can't forfeit challenges, and shields
-    don't work (`rebootExposedMin`).
-  - **Station at a pub**: pick a drop pub from the list and the crate sits next to it.
-    The pub's sheet shows "Marshal … is here · reboots".
-- Organisers see and can remove marshals in HQ.
-
-## Loot chests
-- Every ticked drop pub has a chest with 5 opens (`chestOpens`), **one open per crew**.
-- To open it, a crew member who's still alive must be **inside the pub by GPS** (within
-  45 m). The app rolls the loot, so nobody can pick what they get.
-- The small number on the bottom left of each pub pin is how many opens are left. It turns
-  yellow when the chest is low and grey when it's empty.
-- If two crews grab the last open at the same moment, the later one gets a message and
-  the item is given back, so a chest never goes over its limit.
-- Admin, from a pub's sheet: **− open / + open** changes that chest's size, **Refill**
-  resets it so every crew can open it again. HQ has **Refill every chest** for new phases.
-
-### Loot table (edit `LOOT` in `config.js` to rename, retune or reweight)
-| Item | Rarity | What it does |
+| Item | Rarity | Effect |
 | --- | --- | --- |
-| Shield Potion | Uncommon | When your crew loses, drink it to save the rower who'd go out. |
-| Med Kit | Rare | Revive one knocked-out crewmate anywhere. No exposure. |
+| Shield Potion | Uncommon | When you lose a duel, drink it to save the rower who'd go out. |
+| Med Kit | Rare | Revive a knocked-out crewmate anywhere. |
 | Recon Scanner | Rare | See every crew on the map for 5 minutes. |
 | Boogie Bomb | Epic | Throw it with a challenge. The other crew can't forfeit. |
-| Rocket Launcher | Epic | Fire at any crew on the map. They lose a rower, no duel needed. A shield blocks it. |
+| Rocket Launcher | Epic | Fire at any crew on the map. They lose a rower, no duel needed. |
 | Golden SCAR | Legendary | Win your next duel and the losing crew loses two rowers. |
 
-Loot belongs to the crew and shows on the Crew tab. Shields are offered automatically
-when you lose, and the Golden SCAR fires automatically on your next win. Recon, Med Kit and
-Rocket Launcher have a button.
+## Marshals
+Marshals carry the drinks and show on everyone's map as **supply drops**. They can:
+- referee duels on the spot and settle disputes;
+- knock out anyone caught in the storm;
+- **reboot** a knocked-out player who reaches them (once per player, while their crew is
+  still alive). The catch: the rebooted crew is **Exposed** for 10 minutes. Everyone can
+  see them, they can't forfeit, and shields don't work.
 
-**Item art:** put PNGs in `img/loot/` (`shield.png`, `medkit.png`, `recon.png`, `boogie.png`,
-`rocket.png`, `scar.png`) and they replace the drawn icons. Missing files fall back
-automatically. See `img/loot/README.txt`. The Boogie Bomb is a toggle when you send a challenge.
+## Running the night (organisers)
+Log in with **Staff login**, using the name **Admin** and the staff PIN. Marshals use
+the same PIN with their own name.
 
-## Things to know
-- **Fortnite's font** is Burbank Big Condensed, which is commercial and can't be bundled.
-  The app uses Anton, a close free match. If you buy Burbank, drop the file in `fonts/`
-  with the name `BurbankBigCondensed-Black.woff2` and it's used automatically.
-- **Map tiles** come from OpenStreetMap's free servers, which are fine for one evening.
-  For a different map style, get a free MapTiler key and set `tiles` in `config.js`.
-- **GPS on phones**: the page has to stay open for locations to update. iPhones pause
-  web pages in the background, so tell players to keep the tab open.
-  Indoor GPS can drift 20–50 m. The 45 m pub radius allows for that, and you can change it in `config.js`.
-- **Security**: there are no accounts. Anyone with the link can join, and the staff
-  PIN only guards the controls in the app itself. Anyone who knows the PIN can log in
-  as Admin, so keep it to organisers and marshals. That's fine for a friendly game;
-  just don't post the link publicly.
-- Map data © OpenStreetMap contributors.
+1. **Set the zone.** Tap the yellow pencil on the map. Drag and resize the circle, tap
+   pubs to tick 10 to 15 of them into play, then tap **Set as the zone now**.
+2. **Draw crews** in HQ once everyone has signed up.
+3. **Send the storm** as the night goes on: in the zone planner, place the next circle,
+   pick when it moves in and how long it takes to shrink, then **Send the storm here**.
+4. Watch **HQ** for players in the storm and disputed duels. Refill chests for new phases.
+
+---
+
+## For whoever edits this
+- Plain HTML, CSS and JavaScript with no build step: `index.html`, `styles.css`, `app.js`.
+- **`config.js`** holds everything you're likely to change: staff PIN, starting zone, pub
+  radius, chest size, revive rules, the games list and the loot table.
+- Live data (players, crews, zone, duels, loot) is stored in Firebase Firestore. Access
+  is set by `firestore.rules`, which is published in the Firebase console.
+- Hosting is GitHub Pages: pushing to `main` updates the live site within a minute.
+- Run it locally with `python -m http.server 5173` and open http://localhost:5173.
+- Item art goes in `img/loot/` (see the README there). Missing images fall back to
+  drawn icons.
+- `pubs-cambridge.json` is a saved list of Cambridge pubs from OpenStreetMap, used if the
+  live pub lookup fails.
+
+Map data © OpenStreetMap contributors. Fortnite item art © Epic Games, used in a free,
+unofficial fan game.
