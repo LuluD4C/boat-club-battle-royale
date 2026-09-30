@@ -72,9 +72,9 @@ h3 { font-size: 24px; }
 .btn:disabled { opacity: .4; cursor: not-allowed; }
 .btn-yellow { --c: var(--yellow); --t: #0B1440; }
 .btn-blue { --c: var(--sky); --t: #06173F; }
-/* Dark lettering on bright buttons gets a thin white outline and a soft lift. */
+/* Dark lettering on bright buttons gets a light drop shadow below. */
 .btn-yellow, .btn-blue, .gps-cta, .admin-tip {
-  text-shadow: -1px -1px 0 rgba(255,255,255,.85), 1px -1px 0 rgba(255,255,255,.85), -1px 1px 0 rgba(255,255,255,.85), 1px 1px 0 rgba(255,255,255,.85), 0 3px 0 rgba(255,255,255,.35);
+  text-shadow: 0 3px 0 rgba(255, 255, 255, .6);
 }
 .btn-storm { --c: var(--storm); --t: #fff; }
 .btn-red { --c: var(--red); --t: #fff; }
@@ -111,8 +111,7 @@ input[type="range"] { width: 100%; accent-color: var(--yellow); }
 .logo-top, .logo-main { font-family: var(--display); font-weight: 900; text-transform: uppercase; line-height: .9; }
 .logo-top {
   position: relative; z-index: 1; margin-bottom: 14px; font-size: 46px; color: #fff;
-  -webkit-text-stroke: 1.5px #0A1A5C; paint-order: stroke fill;
-  text-shadow: 0 3px 0 #0A1A5C, 0 6px 0 rgba(0, 0, 0, .35), 0 0 18px rgba(46, 194, 255, .45);
+  text-shadow: 0 5px 0 #0A1A5C, 0 8px 14px rgba(0, 0, 0, .45);
 }
 .logo-main {
   font-size: 64px; color: var(--yellow);
