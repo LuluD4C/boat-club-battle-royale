@@ -8,17 +8,15 @@
 //    - name "Admin"  -> organiser account: HQ, zone planner, sends the storm
 //    - any other name -> marshal: a supply drop on the map, judges duels, revives
 
-export const FIREBASE_CONFIG = null;
-/* Example:
+// Web keys are meant to be public; the Firestore rules (firestore.rules) control access.
 export const FIREBASE_CONFIG = {
-  apiKey: "AIza...",
-  authDomain: "boat-club-br.firebaseapp.com",
-  projectId: "boat-club-br",
-  storageBucket: "boat-club-br.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abc123"
+  apiKey: "AIzaSyBUET3ieymWKlk_hOKQHuwuEn5JfH0GgWQ",
+  authDomain: "bcbr-5a5b6.firebaseapp.com",
+  projectId: "bcbr-5a5b6",
+  storageBucket: "bcbr-5a5b6.firebasestorage.app",
+  messagingSenderId: "375294899160",
+  appId: "1:375294899160:web:2dae9b8ee823effa3338ad"
 };
-*/
 
 export const STAFF_PIN = "2468";   // one PIN for all staff. Change it before the night.
 export const ADMIN_NAME = "Admin"; // log in with this name to get the organiser account.
