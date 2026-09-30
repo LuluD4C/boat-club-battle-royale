@@ -71,10 +71,10 @@ h3 { font-size: 24px; }
 .btn:active { transform: translateY(1px); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .22); }
 .btn:disabled { opacity: .4; cursor: not-allowed; }
 .btn-yellow { --c: var(--yellow); --t: #0B1440; }
-.btn-blue { --c: var(--sky); --t: #06173F; }
+.btn-blue { --c: var(--blue); --t: #FFFFFF; }
 /* Dark lettering on bright buttons gets a drop shadow in a deeper shade of the button. */
-.btn-yellow, .gps-cta, .admin-tip { text-shadow: 0 3px 0 #C9A800; }
-.btn-blue { text-shadow: 0 3px 0 #1B8FC4; }
+.btn-yellow, .admin-tip { text-shadow: 0 3px 0 #C9A800; }
+.btn-blue, .gps-cta { text-shadow: 0 3px 0 #0B2A8A; }
 .btn-storm { --c: var(--storm); --t: #fff; }
 .btn-red { --c: var(--red); --t: #fff; }
 .btn-ghost { --c: rgba(255, 255, 255, .1); --t: #fff; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .25); }
@@ -192,7 +192,7 @@ main { flex: 1; position: relative; min-height: 0; }
 }
 .round svg { width: 24px; height: 24px; fill: #fff; stroke: #fff; }
 .gps-cta { position: absolute; z-index: 500; left: 50%; bottom: 20px; transform: translateX(-50%); }
-.gps-cta { border: 0; padding: 14px 22px; background: var(--yellow); color: #0B1440; font-family: var(--display); font-size: 22px; text-transform: uppercase; clip-path: polygon(3% 0, 100% 0, 97% 100%, 0 100%); cursor: pointer; white-space: nowrap; box-shadow: inset 0 -5px 0 rgba(0,0,0,.2); }
+.gps-cta { border: 0; padding: 14px 22px; background: var(--blue); color: #fff; font-family: var(--display); font-size: 22px; text-transform: uppercase; clip-path: polygon(3% 0, 100% 0, 97% 100%, 0 100%); cursor: pointer; white-space: nowrap; box-shadow: inset 0 -5px 0 rgba(0,0,0,.2); }
 .admin-tip { position: absolute; z-index: 600; left: 12px; right: 12px; bottom: 16px; background: var(--yellow); color: #0B1440; font-weight: 800; text-align: center; padding: 12px; border-radius: 8px; }
 
 /* markers */
@@ -364,3 +364,48 @@ body.planning .hud, body.planning .storm-warning, body.planning .map-buttons, bo
 .loot-tile { flex: none; border-radius: 8px; display: grid; place-items: center; overflow: hidden; border: 2px solid rgba(255,255,255,.35); box-shadow: inset 0 -6px 0 rgba(0,0,0,.2); }
 .loot-tile svg, .loot-tile img { width: 82%; height: 82%; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(0,0,0,.35)); }
 .reboot-card { width: 48px; height: 48px; object-fit: contain; flex: none; filter: drop-shadow(0 2px 3px rgba(0,0,0,.4)); }
+
+/* ---------- chests ---------- */
+.chest-art { display: block; object-fit: contain; filter: drop-shadow(0 6px 8px rgba(0,0,0,.45)); }
+.chest-charge { height: 10px; border-radius: 5px; background: rgba(0,0,0,.45); border: 2px solid #0B1440; overflow: hidden; }
+.chest-charge i { display: block; height: 100%; border-radius: 3px; box-shadow: inset 0 -3px 0 rgba(0,0,0,.2); }
+.chest-card { display: grid; grid-template-columns: 84px 1fr; gap: 14px; align-items: center; padding: 12px; border-radius: 10px; background: rgba(247,183,51,.12); border: 2px solid rgba(247,183,51,.55); }
+.chest-card .stack { gap: 6px; }
+.pin-chest { position: absolute; left: -14px; bottom: -4px; width: 26px; display: flex; flex-direction: column; align-items: center; gap: 1px; }
+.pin-chest svg, .pin-chest img { width: 22px; height: 18px; object-fit: contain; filter: drop-shadow(0 1px 1px rgba(0,0,0,.5)); }
+.pin-chest b { display: block; width: 24px; height: 6px; border-radius: 3px; background: rgba(0,0,0,.55); border: 1.5px solid #0B1440; overflow: hidden; }
+.pin-chest b i { display: block; height: 100%; }
+.pin-chest.empty { opacity: .6; filter: grayscale(1); }
+
+/* ---------- chest opening ---------- */
+.chest-fx { position: fixed; inset: 0; z-index: 2500; display: grid; place-items: center; overflow: hidden;
+  background: radial-gradient(circle at 50% 45%, #1F3FB0 0%, #081640 70%); padding: 24px 16px calc(24px + env(safe-area-inset-bottom)); }
+.fx-rays { position: absolute; left: 50%; top: 45%; width: 180vmax; height: 180vmax; margin: -90vmax 0 0 -90vmax; opacity: 0; transition: opacity .6s;
+  background: repeating-conic-gradient(from 0deg, var(--ray, #FFE81A) 0deg 7deg, transparent 7deg 22deg);
+  -webkit-mask: radial-gradient(circle, #000 0%, transparent 55%); mask: radial-gradient(circle, #000 0%, transparent 55%); }
+.fx-rays.on { opacity: .35; }
+.fx-flash { position: absolute; inset: 0; background: #fff; pointer-events: none; }
+.fx-stage { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; max-width: 360px; text-align: center; }
+.fx-chest { width: min(64vw, 260px); height: auto; cursor: pointer; transition: filter .4s; }
+.fx-hint { font-family: var(--display); font-size: 26px; text-transform: uppercase; color: #fff; text-shadow: 0 3px 0 #0A1A5C; }
+.fx-card { width: min(78vw, 300px); border-radius: 16px; padding: 18px 16px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px;
+  background: linear-gradient(180deg, var(--rc) 0%, #0F2573 85%); border: 3px solid #fff; box-shadow: 0 0 0 4px var(--rc), 0 20px 50px rgba(0,0,0,.5); }
+.fx-card h2 { font-size: 40px; }
+.fx-card p { margin: 0; }
+.fx-rarity { font-size: 13px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; padding: 3px 12px; border-radius: 4px; color: #0B1440; background: var(--rc); border: 2px solid #fff; }
+.fx-tag { font-size: 13px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) {
+  .fx-chest.idle { animation: fxBob 1.6s ease-in-out infinite; }
+  .fx-chest.shake { animation: fxShake .11s linear infinite; }
+  .fx-flash { animation: fxFlash .55s ease-out forwards; }
+  .fx-card { animation: fxCard .75s cubic-bezier(.2, 1.35, .4, 1) both; }
+  .fx-rays.on { animation: fxSpin 14s linear infinite; }
+}
+@keyframes fxBob { 50% { transform: translateY(-10px) rotate(-1.5deg); } }
+@keyframes fxShake { 0%, 100% { transform: rotate(0) translateX(0); } 25% { transform: rotate(-5deg) translateX(-4px); } 75% { transform: rotate(5deg) translateX(4px); } }
+@keyframes fxFlash { from { opacity: 1; } to { opacity: 0; } }
+@keyframes fxCard { from { opacity: 0; transform: perspective(700px) translateY(60px) scale(.35) rotateY(180deg); } 55% { opacity: 1; } to { opacity: 1; transform: none; } }
+@keyframes fxSpin { to { transform: rotate(360deg); } }
+.chest-card > .stack { min-width: 0; }
+.chest-card .btn { white-space: normal; }
+.view-scroll > div > * { min-width: 0; max-width: 100%; }

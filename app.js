@@ -1,4 +1,4 @@
-import { FIREBASE_CONFIG, STAFF_PIN, ADMIN_NAME, GAME_ID, DEFAULTS, GAMES, LOOT } from './config.js?v=2';
+import { FIREBASE_CONFIG, STAFF_PIN, ADMIN_NAME, GAME_ID, DEFAULTS, GAMES, LOOT } from './config.js?v=5';
 
 /* ============================================================
    Helpers
@@ -172,6 +172,25 @@ const ICONS = {
   rocket: '<g transform="rotate(-28 32 32)"><rect x="3" y="26" width="44" height="13" rx="3" fill="#6B7A40" stroke="#0B1440" stroke-width="3"/><path d="M47 23l13 9.5L47 42z" fill="#FF4957" stroke="#0B1440" stroke-width="3" stroke-linejoin="round"/><rect x="17" y="39" width="7" height="11" rx="1" fill="#3E4A24" stroke="#0B1440" stroke-width="2.5"/><rect x="28" y="19" width="11" height="7" rx="1" fill="#3E4A24" stroke="#0B1440" stroke-width="2.5"/><path d="M3 29h-3M3 36h-3" stroke="#FFB020" stroke-width="3"/></g>',
   scar: '<path d="M3 27h30l4-5h15v6h9v6H47l-4 5H31l-3 13h-9l3-13h-6l-4 7H5l4-9H3z" fill="#F7B733" stroke="#0B1440" stroke-width="3" stroke-linejoin="round"/><rect x="20" y="17" width="13" height="6" rx="1" fill="#C98A12" stroke="#0B1440" stroke-width="2.5"/><path d="M8 31h24" stroke="#FFE7A6" stroke-width="2"/>'
 };
+// Chest art: img/chest.png if it exists, otherwise a drawn chest.
+const CHEST_SVG = '<svg viewBox="0 0 64 56" aria-hidden="true"><path d="M6 22a12 12 0 0 1 12-12h28a12 12 0 0 1 12 12v4H6z" fill="#E0A63A" stroke="#3A2408" stroke-width="3"/><rect x="6" y="26" width="52" height="26" rx="3" fill="#D39530" stroke="#3A2408" stroke-width="3"/><path d="M6 34h52" stroke="#9A6419" stroke-width="2"/><rect x="14" y="10" width="7" height="42" fill="#7D8BA6" stroke="#2B3450" stroke-width="2.5"/><rect x="43" y="10" width="7" height="42" fill="#7D8BA6" stroke="#2B3450" stroke-width="2.5"/><rect x="26" y="21" width="12" height="15" rx="2" fill="#AEB8CC" stroke="#2B3450" stroke-width="2.5"/><path d="M32 26v5" stroke="#2B3450" stroke-width="3" stroke-linecap="round"/></svg>';
+// Check once whether the chest picture exists, so pins don't keep requesting it.
+let CHEST_IMG = null;
+{ const probe = new Image(); probe.onload = () => { CHEST_IMG = true; if (typeof renderAll === 'function') renderAll(); }; probe.onerror = () => { CHEST_IMG = false; }; probe.src = 'img/chest.png'; }
+function chestArt(cls = 'chest-art', style = {}) {
+  const box = h('div', { class: cls, style });
+  if (!CHEST_IMG) { box.innerHTML = CHEST_SVG; const sv = box.querySelector('svg'); sv.style.width = '100%'; sv.style.height = '100%'; return box; }
+  const img = h('img', { src: 'img/chest.png', alt: 'Loot chest', style: { width: '100%', height: '100%', objectFit: 'contain', display: 'block' } });
+  img.onerror = () => { box.innerHTML = CHEST_SVG; const sv = box.querySelector('svg'); sv.style.width = '100%'; sv.style.height = '100%'; };
+  box.append(img); return box;
+}
+// Green when full, through yellow, to red when nearly empty.
+function chargeColor(f) {
+  if (f <= 0) return '#6B7593';
+  const mix = (a, b, t) => '#' + [0, 2, 4].map(i => Math.round(parseInt(a.slice(i + 1, i + 3), 16) * (1 - t) + parseInt(b.slice(i + 1, i + 3), 16) * t).toString(16).padStart(2, '0')).join('');
+  return f >= .5 ? mix('#FFE81A', '#5BE35B', (f - .5) * 2) : mix('#FF4957', '#FFE81A', f * 2);
+}
+const chargeLabel = f => f <= 0 ? 'Empty' : f > .6 ? 'Plenty inside' : f > .3 ? 'Running low' : 'Nearly empty';
 function lootTile(L, size = 52) {
   const col = RARITY[L.rarity] || RARITY.common;
   const tile = h('div', { class: 'loot-tile', style: { width: size + 'px', height: size + 'px', background: `radial-gradient(circle at 50% 30%, ${col} 0%, ${col}AA 45%, #0B1440 115%)` } });
@@ -352,7 +371,9 @@ function renderMarkers() {
   // pubs
   const pubItems = S.pubs.map(pub => {
     const n = crewsAtPub(pub, P).length, max = chestMax(pub), left = max ? chestLeft(pub) : 0;
-    const chest = max ? `<span class="pin-chest${left === 0 ? ' empty' : left <= Math.ceil(max / 3) ? ' low' : ''}" title="Chest: ${left} of ${max} left">${left}</span>` : '';
+    const f = max ? left / max : 0;
+    const chest = max ? `<span class="pin-chest${left === 0 ? ' empty' : ''}">${CHEST_IMG ? '<img src="img/chest.png" alt="">' : CHEST_SVG}` +
+      `<b><i style="width:${Math.max(left ? 12 : 0, f * 100)}%;background:${chargeColor(f)}"></i></b></span>` : '';
     return { key: pub.id, at: [pub.lat, pub.lon], size: [34, 34], anchor: [17, 41], z: 100,
       html: `<div class="pin-pub${n >= 2 ? ' hot' : ''}">${MUG}</div>${n ? `<span class="pin-count">${n}</span>` : ''}${chest}`,
       click: () => (S.plan ? togglePub(pub) : openPub(pub.id)) };
@@ -499,12 +520,13 @@ function chestBlock(pub, meHere, mine, meP) {
     if (S.admin) out.push(h('button', { class: 'btn btn-ghost btn-sm', type: 'button', text: 'Add a loot chest here', onclick: () => save(api.update('pubs', pub.id, { chestMax: DEFAULTS.chestOpens || 5 }), 'Chest added.') }));
     return out;
   }
-  const left = chestLeft(pub), opened = mine && crewOpened(pub, mine.id);
+  const left = chestLeft(pub), opened = mine && crewOpened(pub, mine.id), f = left / max;
   const box = [h('div', { class: 'row spread' }, h('span', { class: 'display', style: { fontSize: '22px' }, text: 'Loot chest' }),
-    h('span', { class: 'pill ' + (left === 0 ? 'red' : left <= Math.ceil(max / 3) ? 'yellow' : 'green'), text: left ? `${left} of ${max} left` : 'Empty' })),
-    h('div', { class: 'meter' }, h('i', { style: { width: (left / max * 100) + '%' } }))];
+    h('span', { class: 'pill', style: { background: chargeColor(f), color: f > 0 ? '#0B1440' : '#fff' }, text: chargeLabel(f) })),
+    h('div', { class: 'chest-charge' }, h('i', { style: { width: Math.max(left ? 8 : 0, f * 100) + '%', background: chargeColor(f) } })),
+    S.admin ? h('p', { class: 'fine', text: `Organisers only: ${left} of ${max} opens left.` }) : null];
   if (mine) {
-    if (opened) box.push(h('p', { class: 'fine', text: 'Your crew has opened this chest. One open per crew.' }));
+    if (opened) box.push(h('p', { class: 'fine', text: 'Your crew has already opened this chest. One open per crew.' }));
     else if (!left) box.push(h('p', { class: 'fine', text: 'Emptied. Try another pub.' }));
     else if (!meHere) box.push(h('p', { class: 'fine', text: 'Get inside to open it. One open per crew.' }));
     else if (!isAlive(meP)) box.push(h('p', { class: 'fine', text: "You're out. A crewmate who's still in can open it." }));
@@ -514,7 +536,7 @@ function chestBlock(pub, meHere, mine, meP) {
     h('button', { class: 'btn btn-ghost btn-sm', type: 'button', text: '− open', onclick: () => save(api.update('pubs', pub.id, { chestMax: Math.max(0, max - 1) })) }),
     h('button', { class: 'btn btn-ghost btn-sm', type: 'button', text: '+ open', onclick: () => save(api.update('pubs', pub.id, { chestMax: max + 1 })) }),
     h('button', { class: 'btn btn-ghost btn-sm', type: 'button', text: 'Refill', onclick: e => confirmTap(e.target, () => save(api.update('pubs', pub.id, { chestRound: chestRound(pub) + 1 }), 'Chest refilled. Every crew can open it again.'), 'Refill?') })));
-  out.push(h('div', { class: 'chest' }, box));
+  out.push(h('div', { class: 'chest-card' }, chestArt('chest-art', { width: '84px', height: '72px' }), h('div', { class: 'stack' }, box)));
   return out;
 }
 async function openChest(pub) {
@@ -524,14 +546,48 @@ async function openChest(pub) {
   if (!chestLeft(pub)) { toast('This chest is empty.'); return; }
   const type = rollLoot();
   if (!(await save(api.set('items', id, { crewId: mine.id, type, pubId: pub.id, pubName: pub.name, round, at: Date.now(), by: S.pid })))) return;
-  S.reveal = id; renderAll();
+  playChest(type, { itemId: id });
   // Two crews can open the last slot at the same moment; the later one gives it back.
   setTimeout(async () => {
     const opens = chestOpens(pub), idx = opens.findIndex(i => i.id === id);
-    if (idx >= chestMax(pub)) { await api.del('items', id); if (S.reveal === id) S.reveal = null; toast('Another crew emptied the chest a moment before you.'); renderAll(); return; }
+    if (idx >= chestMax(pub)) { await api.del('items', id); closeChest(); toast('Another crew emptied the chest a moment before you.'); renderAll(); return; }
     await logEvent(`${mine.name} looted the chest at ${pub.name}.` + (idx === chestMax(pub) - 1 ? ` That chest is now empty.` : ''));
   }, 1500);
 }
+/* Chest opening: tap the chest, it shakes and glows in the colour of what's inside
+   (rarer = longer), flash, then the item card flips in. */
+let fxTimers = [];
+function closeChest() { fxTimers.forEach(clearTimeout); fxTimers = []; $('#chestFx').hidden = true; $('#fxRays').className = 'fx-rays'; }
+function playChest(type, { practice = false } = {}) {
+  const L = lootDef(type), col = RARITY[L.rarity] || RARITY.common;
+  const order = ['common', 'uncommon', 'rare', 'epic', 'legendary'], tier = Math.max(0, order.indexOf(L.rarity));
+  const fx = $('#chestFx'), stage = $('#fxStage'), rays = $('#fxRays'), flash = $('#fxFlash');
+  fxTimers.forEach(clearTimeout); fxTimers = [];
+  fx.hidden = false; rays.className = 'fx-rays'; flash.hidden = true; fx.style.setProperty('--ray', col);
+  const chest = chestArt('fx-chest idle');
+  let opened = false;
+  const open = () => {
+    if (opened) return; opened = true;
+    chest.className = 'fx-chest shake';
+    // Glow builds through the rarity colours up to the real one.
+    order.slice(0, tier + 1).forEach((r, i) => fxTimers.push(setTimeout(() => { chest.style.filter = `drop-shadow(0 0 ${14 + i * 8}px ${RARITY[r]}) drop-shadow(0 0 ${6 + i * 4}px ${RARITY[r]})`; }, i * 420)));
+    const burstAt = 700 + tier * 420;
+    fxTimers.push(setTimeout(() => {
+      flash.hidden = false; flash.style.animation = 'none'; void flash.offsetWidth; flash.style.animation = '';
+      rays.className = 'fx-rays on';
+      put(stage,
+        h('div', { class: 'fx-card', style: { '--rc': col } },
+          h('div', { class: 'fx-rarity', text: L.rarity }), lootTile(L, 150), h('h2', { text: L.name }), h('p', { text: L.desc })),
+        h('div', { class: 'fx-tag', text: practice ? 'Practice chest · not saved' : "Added to your crew's loot" }),
+        practice ? h('button', { class: 'btn btn-blue', type: 'button', text: 'Open another', onclick: () => playChest(rollLoot(), { practice: true }) }) : null,
+        h('button', { class: 'btn btn-yellow', type: 'button', text: practice ? 'Done' : 'Nice', onclick: () => { closeChest(); renderAll(); } }));
+    }, burstAt));
+  };
+  chest.onclick = open;
+  put(stage, h('div', { class: 'fx-tag', text: practice ? 'Practice chest' : 'Loot chest' }), chest, h('div', { class: 'fx-hint', text: 'Tap to open' }),
+    practice ? h('button', { class: 'link', type: 'button', text: 'Close', style: { color: '#fff' }, onclick: closeChest }) : null);
+}
+
 function challengePicker(pub, targetId) {
   const target = crewById(targetId); let pick = S.challengeGame || GAMES[0].id;
   const wrap = h('div', { class: 'stack' });
@@ -718,19 +774,7 @@ function renderCrew() {
     const ex = exposedUntil(c, P), rc = reconUntil(c.id);
     if (ex) kids.push(h('div', { class: 'card', style: { borderColor: 'var(--red)' } }, h('h3', { text: `Exposed · ${fmtClock(ex - Date.now())}` }), h('p', { class: 'fine', text: "After a reboot your whole crew shows on everyone's map, you can't forfeit, and shields don't work. Lie low." })));
     const inv = crewItems(c.id);
-    kids.push(h('div', { class: 'card' }, h('div', { class: 'row spread' }, h('h3', { text: 'Crew loot' }), pill(`${inv.length} item${inv.length === 1 ? '' : 's'}`)),
-      inv.length ? h('div', { class: 'list' }, inv.map(it => {
-        const L = lootDef(it.type), col = RARITY[L.rarity];
-        let act = null;
-        if (it.type === 'shield') act = pill('Offered when you lose', 'green');
-        else if (it.type === 'scar') act = pill('Fires on your next win', 'yellow');
-        else if (it.type === 'boogie') act = pill('Throw when challenging');
-        else if (it.type === 'recon') act = rc ? pill('Scanning') : h('button', { class: 'btn btn-blue btn-sm', type: 'button', text: 'Scan', onclick: e => confirmTap(e.target, async () => { await useItem(it); logEvent(`${c.name} used a Recon Scanner.`); toast('Every crew is on your map for ' + (DEFAULTS.reconMin || 5) + ' minutes.'); showView('map'); }, 'Scan now?') });
-        else if (it.type === 'medkit') act = h('button', { class: 'btn btn-blue btn-sm', type: 'button', text: 'Use', disabled: !c.members.some(id => P[id] && !isAlive(P[id])), onclick: () => { S.itemUse = it.id; renderAll(); } });
-        else if (it.type === 'rocket') act = h('button', { class: 'btn btn-red btn-sm', type: 'button', text: 'Fire', onclick: () => { S.itemUse = it.id; renderAll(); } });
-        return h('div', { class: 'loot-row' }, lootTile(L),
-          h('div', null, h('div', { class: 'rarity', style: { color: col }, text: L.rarity }), h('div', { class: 'name', text: L.name }), h('div', { class: 'sub', text: L.desc })), act);
-      })) : h('p', { class: 'fine', text: 'No loot yet. Open chests in drop pubs.' })));
+    if (inv.length) kids.push(h('button', { class: 'btn btn-ghost btn-sm', type: 'button', text: `Crew loot: ${inv.length} item${inv.length === 1 ? '' : 's'} →`, onclick: () => showView('loot') }));
     if (me && !isAlive(me) && (DEFAULTS.revivesPerPlayer ?? 1) > (me.revives || 0) && alive.length)
       kids.push(h('div', { class: 'card', style: { borderColor: 'var(--sky)' } }, h('div', { class: 'row' }, h('img', { class: 'reboot-card', src: 'img/loot/reboot.png', alt: '' }), h('h3', { text: "You're out, but not done" })), h('p', { class: 'fine', text: 'Find a marshal (the supply-drop crates on the map) to be revived while your crew is still alive.' })));
   }
@@ -750,6 +794,34 @@ async function leaveGame() {
 /* ============================================================
    Duels tab
    ============================================================ */
+function renderLoot() {
+  const c = myCrew(), P = pMap(), kids = [h('h2', { text: 'Loot' })];
+  if (c) {
+    const inv = crewItems(c.id), rc = reconUntil(c.id);
+    kids.push(h('div', { class: 'card' }, h('div', { class: 'row spread' }, h('h3', { text: 'Crew loot' }), pill(`${inv.length} item${inv.length === 1 ? '' : 's'}`, inv.length ? 'yellow' : '')),
+      inv.length ? h('div', { class: 'list' }, inv.map(it => {
+        const L = lootDef(it.type), col = RARITY[L.rarity];
+        let act = null;
+        if (it.type === 'shield') act = pill('Offered when you lose', 'green');
+        else if (it.type === 'scar') act = pill('Fires on your next win', 'yellow');
+        else if (it.type === 'boogie') act = pill('Throw when challenging');
+        else if (it.type === 'recon') act = rc ? pill('Scanning') : h('button', { class: 'btn btn-blue btn-sm', type: 'button', text: 'Scan', onclick: e => confirmTap(e.target, async () => { await useItem(it); logEvent(`${c.name} used a Recon Scanner.`); toast('Every crew is on your map for ' + (DEFAULTS.reconMin || 5) + ' minutes.'); showView('map'); }, 'Scan now?') });
+        else if (it.type === 'medkit') act = h('button', { class: 'btn btn-blue btn-sm', type: 'button', text: 'Use', disabled: !c.members.some(id => P[id] && !isAlive(P[id])), onclick: () => { S.itemUse = it.id; renderAll(); } });
+        else if (it.type === 'rocket') act = h('button', { class: 'btn btn-red btn-sm', type: 'button', text: 'Fire', onclick: () => { S.itemUse = it.id; renderAll(); } });
+        return h('div', { class: 'loot-row' }, lootTile(L),
+          h('div', null, h('div', { class: 'rarity', style: { color: col }, text: L.rarity }), h('div', { class: 'name', text: L.name }), h('div', { class: 'sub', text: L.desc })), act);
+      })) : h('p', { class: 'fine', text: 'Nothing yet. Find a chest in a drop pub and open it with your crew.' })));
+  } else kids.push(h('div', { class: 'empty', text: 'Your crew’s loot shows here once crews are drawn.' }));
+  kids.push(h('div', { class: 'chest-card' }, chestArt('chest-art', { width: '84px', height: '72px' }),
+    h('div', { class: 'stack' }, h('h3', { text: 'How chests work' }),
+      h('p', { class: 'fine', text: "Chests sit in drop pubs. Get inside with your crew to open one. Each crew can open a chest once, and chests run dry: the bar goes from green to red as a chest empties." }),
+      h('button', { class: 'btn btn-blue btn-sm', type: 'button', text: 'Try a practice chest', onclick: () => playChest(rollLoot(), { practice: true }) }))));
+  kids.push(h('div', { class: 'card' }, h('h3', { text: 'What you can find' }),
+    h('div', { class: 'list' }, LOOT.map(L => h('div', { class: 'loot-row' }, lootTile(L),
+      h('div', null, h('div', { class: 'rarity', style: { color: RARITY[L.rarity] }, text: L.rarity }), h('div', { class: 'name', text: L.name }), h('div', { class: 'sub', text: L.desc })), null)))));
+  patch($('#lootBody'), kids);
+  const b = $('#lootBadge'), n = c ? crewItems(c.id).length : 0; b.hidden = !n; b.textContent = n;
+}
 function duelCard(d, mine) {
   const A = crewById(d.from), B = crewById(d.to), ours = mine && (d.from === mine.id || d.to === mine.id);
   const other = ours ? crewById(d.from === mine.id ? d.to : d.from) : null;
@@ -785,9 +857,7 @@ function renderDuels() {
     h('div', { class: 'list' }, ranked.map(c => { const n = aliveIn(c, P).length; return h('div', { class: 'item' + (n ? '' : ' out') + (mine && c.id === mine.id ? ' mine' : '') }, h('span', { class: 'swatch', style: { background: c.color } }), h('div', { class: 'grow' }, h('div', { class: 'name', text: c.name }), h('div', { class: 'sub', text: n ? `${n} of ${c.members.length} alive` : 'Sunk' })), h('div', { class: 'dots' }, c.members.map(id => h('i', { class: isAlive(P[id]) ? '' : 'x' })))); }))));
   kids.push(h('div', { class: 'card' }, h('h3', { text: 'The games' }), h('div', { class: 'games' }, GAMES.map(g => h('div', { class: 'game', style: { cursor: 'default' } }, h('b', { text: g.name }), h('span', { text: g.desc })))),
     h('p', { class: 'fine', text: 'Challenges happen in drop pubs only. Accept or forfeit. The losing crew picks one rower to go out. One life each.' })));
-  kids.push(h('div', { class: 'card' }, h('h3', { text: 'Loot' }), h('p', { class: 'fine', text: `Every drop pub has a chest with ${DEFAULTS.chestOpens || 5} opens, one per crew. The number on each pub pin is how many are left.` }),
-    h('div', { class: 'list' }, LOOT.map(L => h('div', { class: 'loot-row' }, lootTile(L),
-      h('div', null, h('div', { class: 'rarity', style: { color: RARITY[L.rarity] }, text: L.rarity }), h('div', { class: 'name', text: L.name }), h('div', { class: 'sub', text: L.desc })), null)))));
+
   const log = S.log.slice().sort((a, b) => b.t - a.t).slice(0, 80);
   kids.push(h('div', { class: 'card' }, h('h3', { text: 'Kill feed' }), log.length ? h('div', { class: 'log' }, log.map(e => h('div', null, h('time', { text: clock(e.t) }), h('span', { text: e.text })))) : h('p', { class: 'fine', text: 'Nothing yet.' })));
   patch($('#duelBody'), kids);
@@ -1180,7 +1250,7 @@ function showView(v) {
   if (v === 'marshal' && !S.marshalId) v = 'map';
   if (v !== 'map' && S.plan) { S.plan = null; }
   S.view = v;
-  for (const id of ['map', 'crew', 'duels', 'marshal', 'hq']) $('#view-' + id).hidden = id !== v;
+  for (const id of ['map', 'crew', 'loot', 'duels', 'marshal', 'hq']) $('#view-' + id).hidden = id !== v;
   document.querySelectorAll('#tabbar button').forEach(b => b.classList.toggle('on', b.dataset.view === v));
   document.body.classList.toggle('on-map', v === 'map');
   if (v === 'map') setTimeout(() => map.invalidateSize(), 0);
@@ -1226,6 +1296,7 @@ function renderAll() {
   if (!map) return;
   renderZoneLayers(); renderMarkers(); renderHud(); renderPub(); renderModal(); renderPlanner();
   if (S.view === 'crew') renderCrew();
+  renderLoot();
   if (S.view === 'marshal') renderMarshal();
   renderDuels();
   if (S.view === 'hq') renderHq();

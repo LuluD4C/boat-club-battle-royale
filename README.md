@@ -30,8 +30,10 @@ chests, rival crews and duels are all inside. One life each. The last crew stand
 | Pub Quiz Question | A neutral asks one question. First right answer wins. |
 
 ## Loot
-Every drop pub has a chest with 5 opens, **one per crew**. You have to be inside the pub
-(by GPS) to open it. The app rolls the loot, and it belongs to your crew.
+Drop pubs have loot chests. Get inside the pub (by GPS) with your crew to open one. Each
+crew can open a chest **once**, and chests run dry: the bar on the chest goes from green
+to red as it empties. Your crew's loot is on the **Loot** tab, which also has a practice
+chest to try the opening.
 
 | Item | Rarity | Effect |
 | --- | --- | --- |
@@ -59,6 +61,7 @@ the same PIN with their own name.
 2. **Draw crews** in HQ once everyone has signed up.
 3. **Send the storm** as the night goes on: in the zone planner, place the next circle,
    pick when it moves in and how long it takes to shrink, then **Send the storm here**.
+   Each chest's exact number of opens (5 by default) shows only to Admin, on the pub's card.
 4. Watch **HQ** for players in the storm and disputed duels. Refill chests for new phases.
 
 ---
@@ -71,8 +74,10 @@ the same PIN with their own name.
   is set by `firestore.rules`, which is published in the Firebase console.
 - Hosting is GitHub Pages: pushing to `main` updates the live site within a minute.
 - Run it locally with `python -m http.server 5173` and open http://localhost:5173.
-- Item art goes in `img/loot/` (see the README there). Missing images fall back to
-  drawn icons.
+- Item art goes in `img/loot/` (see the README there), and the chest picture is
+  `img/chest.png`. Missing images fall back to drawn icons.
+- After changing CSS or JS, bump the `?v=` number on the links in `index.html` (and the
+  config import in `app.js`) so phones fetch the new files.
 - `pubs-cambridge.json` is a saved list of Cambridge pubs from OpenStreetMap, used if the
   live pub lookup fails.
 
