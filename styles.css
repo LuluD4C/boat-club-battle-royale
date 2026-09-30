@@ -72,10 +72,9 @@ h3 { font-size: 24px; }
 .btn:disabled { opacity: .4; cursor: not-allowed; }
 .btn-yellow { --c: var(--yellow); --t: #0B1440; }
 .btn-blue { --c: var(--sky); --t: #06173F; }
-/* Dark lettering on bright buttons gets a light drop shadow below. */
-.btn-yellow, .btn-blue, .gps-cta, .admin-tip {
-  text-shadow: 0 3px 0 rgba(255, 255, 255, .6);
-}
+/* Dark lettering on bright buttons gets a drop shadow in a deeper shade of the button. */
+.btn-yellow, .gps-cta, .admin-tip { text-shadow: 0 3px 0 #C9A800; }
+.btn-blue { text-shadow: 0 3px 0 #1B8FC4; }
 .btn-storm { --c: var(--storm); --t: #fff; }
 .btn-red { --c: var(--red); --t: #fff; }
 .btn-ghost { --c: rgba(255, 255, 255, .1); --t: #fff; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .25); }
